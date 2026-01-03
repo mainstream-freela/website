@@ -1,5 +1,5 @@
-import { DecimalPipe, NgClass } from '@angular/common';
-import { Component, computed, inject, OnDestroy, OnInit, signal } from '@angular/core';
+import { DecimalPipe, isPlatformBrowser, NgClass } from '@angular/common';
+import { Component, computed, inject, OnDestroy, OnInit, PLATFORM_ID, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { StreamStats } from '@core/api/stream-stats.service';
 import { AgoraIOService } from '@core/services/agora.service';
@@ -143,6 +143,8 @@ export class WatchComponent implements OnInit, OnDestroy {
   private router = inject(Router);
   private streamStats = inject(StreamStats);
 
+  private platformId = inject(PLATFORM_ID);
+
   notFound = signal<boolean>(true);
   event = computed(() => this.streamService.eventInLive())
   isLive = computed(() => this.agoraService.isLive());
@@ -164,9 +166,12 @@ export class WatchComponent implements OnInit, OnDestroy {
     }
 
     this.notFound.set(false);
-    this.agoraService.joinAsAudience();
 
-    this.startPingInterval(10);
+    if(isPlatformBrowser(this.platformId)){
+      this.agoraService.joinAsAudience();
+      this.startPingInterval(10);
+    }
+
   }
 
   toggleFullScreen() {

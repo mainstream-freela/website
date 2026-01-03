@@ -4,18 +4,24 @@ import { AgoraUid, IdentificateGuest, JoinLiveEvent, LiveAccessResponse, PaidEve
 import { AgoraUidStorage } from "@core/data/agora-uid.data";
 import { LiveAccessFacade } from "@core/facades/live.facade";
 import { response } from "express";
-import { map, Observable, tap } from "rxjs";
+import { catchError, map, Observable, tap, throwError } from "rxjs";
 import { environment } from "src/environments/environment";
+import { HttpErrorCatcher } from "./http-error-catcher";
 
 @Injectable({
     providedIn: 'root'
 })
-export class LiveApiService {
+export class LiveApiService extends HttpErrorCatcher {
     private http = inject(HttpClient);
 
     getEventsPaiedByGuest(guest: IdentificateGuest): Observable<PaidEventsForIdentifiedGuests[]>{
         return this.http.post<PaidEventsForIdentifiedGuests[]>(`${ environment.server }/api/v1/live/guest/access/available-events`, guest)
-                        .pipe();
+                        .pipe(
+                            catchError(error => {
+                                this.connectionError(error);
+                                return throwError(() => error);
+                            })
+                        );
     }
 
     joinToEvent(data: JoinLiveEvent): Observable<LiveAccessResponse>{
@@ -27,12 +33,21 @@ export class LiveApiService {
                 }
 
                 return response.data;
+            }),
+            catchError(error => {
+                this.connectionError(error);
+                return throwError(() => null);
             })
         );
     }
 
     ping(data: AgoraUid): Observable<any>{
-        return this.http.post<any>(`${ environment.server }/api/v1/live/guest/access/ping`, data);
+        return this.http.post<any>(`${ environment.server }/api/v1/live/guest/access/ping`, data).pipe(
+            catchError(error => {
+                this.connectionError(error);
+                return throwError(() => null);
+            })
+        );
     }
 
     leave(data: AgoraUid): Observable<any>{
@@ -43,6 +58,10 @@ export class LiveApiService {
                     console.log("Event Uid -> ", response.event);
                     AgoraUidStorage.remove(response.event, 'audience');
                 }
+            }),
+            catchError(error => {
+                this.connectionError(error);
+                return throwError(() => null);
             })
         );
     }

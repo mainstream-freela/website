@@ -14,6 +14,7 @@ export class FaqComponent implements OnInit {
 
   faqs: WritableSignal<Faq[]> = signal([]);
   isLoading = signal<boolean>(true);
+  hasErrors = signal<boolean>(true);
   aboutusFacade = inject(AboutFacade);
 
   ngOnInit(): void {
@@ -26,6 +27,11 @@ export class FaqComponent implements OnInit {
       next: response => {
         this.faqs.set(response)
         this.isLoading.set(false);
+        this.hasErrors.set(false);
+      },
+      error: err => {
+        this.isLoading.set(false)
+        this.hasErrors.set(true);
       }
     });
   }

@@ -1,6 +1,6 @@
 import { NgClass } from '@angular/common';
 import { HttpStatusCode } from '@angular/common/http';
-import { Component, inject, input, OnInit, signal } from '@angular/core';
+import { Component, inject, input, model, OnInit, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ContactUsApiService } from '@core/api/contact-us.api.service';
 import { ContactUsContract } from '@core/contracts/contact-us.contract';
@@ -19,7 +19,8 @@ export class ContentComponent implements OnInit {
   contactClient = inject(ContactUsApiService);
 
   aboutus = input.required<AboutUs | null>();
-  isLoading = input.required<boolean>();
+  isLoading = model.required<boolean>();
+  hasErrors = input.required<boolean>();
   openDialog = signal<boolean>(false);
 
   contactUsFormGroup!: FormGroup;
@@ -74,6 +75,7 @@ export class ContentComponent implements OnInit {
       error: (error) => {
 
         console.error(error);
+        this.isLoading.set(false);
 
         // if(error.status === HttpStatusCode.UnprocessableEntity){
         //   // const messages: string[] = [];

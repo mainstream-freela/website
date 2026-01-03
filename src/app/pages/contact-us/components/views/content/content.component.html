@@ -1,7 +1,7 @@
 <div class="section-content">
     <div class="limited-container py-16 flex flex-col-reverse gap-10 xl:gap-0 xl:flex-row justify-between items-stretch">
         <div data-aos="fade-right" class="info-container w-full lg:w-[610px] flex flex-col gap-10">
-            @if (!isLoading()) {
+            @if (!isLoading() && !hasErrors()) {
                 <div class="contacts-section flex flex-col gap-7">
                     <h1 class="text-(color:--secondary) text-3xl leading-[120%] font-semibold !font-['Unigeo']">
                     Fale connosco

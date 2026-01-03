@@ -282,7 +282,6 @@ export class LiveAccessComponent implements OnInit {
     caller.subscribe({
       next: callback,
       error: (error) => {
-        console.log(error)
         if(error.status === HttpStatusCode.UnprocessableEntity){
           for (const key in error.error.errors) {
             if (error.error.errors[key] && Array.isArray(error.error.errors[key])) {

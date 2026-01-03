@@ -13,7 +13,6 @@ export interface JoinLiveEvent{
 export type PaidEventsForIdentifiedGuests = Partial<Event>;
 
 export interface LiveAccessResponse{
-    app_id: string,
     token: string,
     channel: string,
     uid: string

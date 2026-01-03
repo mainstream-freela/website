@@ -5,10 +5,10 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "build-seller": "ng build --project=seller-backoffice",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:mainstream": "node dist/mainstream/server/server.mjs",
-    "prebuild": "node generate-env.js && node generate-env-seller.js && ng build --project seller-backoffice"
+    "serve:ssr:mainstream": "node dist/mainstream/server/server.mjs"
   },
   "private": true,
   "dependencies": {

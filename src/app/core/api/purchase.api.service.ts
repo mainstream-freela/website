@@ -2,13 +2,16 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { CheckoutContract } from "@core/contracts/checkout.contract";
 import { TicketPurchaser } from "@core/models/purchaser.model";
-import { Observable } from "rxjs";
+import { catchError, Observable, throwError } from "rxjs";
 import { environment } from "src/environments/environment";
+import { HttpErrorCatcher } from "./http-error-catcher";
 
 @Injectable()
-export class PurchaseTicket{
+export class PurchaseTicket extends HttpErrorCatcher{
 
-    constructor (private http: HttpClient) {}
+    constructor (private http: HttpClient) {
+        super();
+    }
     
     purchaseTicket(ticketPurchaser: TicketPurchaser, checkout: CheckoutContract): Observable<any>{
         const purchaseJson = {
@@ -29,7 +32,12 @@ export class PurchaseTicket{
             purchaseFormData.append('payment_proof', ticketPurchaser.payment_proof);
         }
 
-        return this.http.post(`${environment.server}/api/v1/client/purchase/ticket/${checkout.ticket.uuid}`, purchaseFormData, { observe: 'response' });
+        return this.http.post(`${environment.server}/api/v1/client/purchase/ticket/${checkout.ticket.uuid}`, purchaseFormData, { observe: 'response' }).pipe(
+            catchError(error => {
+                this.connectionError(error);
+                return throwError(() => null);
+            })
+        );
     }
 
 }

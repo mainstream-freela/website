@@ -28,6 +28,8 @@ import { AccordionBodyAdjusterDirective } from '@pages/faq/directives/accordion-
                   </p>
                 </div>
               </div>
+            } @empty {
+              <p class="">Sem informações para mostrar</p>
             }
   
           </div>
@@ -44,6 +46,7 @@ export class ContentComponent {
   extendedIndex = signal<number>(-1);
   faqs = input.required<Faq[]>();
   isLoading = input.required<boolean>();
+  hasErrors = input.required<boolean>();
 
   extends(index: number): void{
     if(index === this.extendedIndex()){

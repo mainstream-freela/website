@@ -4,20 +4,26 @@ import { EventDetails } from '@core/contracts/event-details.contract';
 import { SearchTerm } from '@core/contracts/search-term.contract';
 import { Event, PaginatedEventResponse } from '@core/models/event.model';
 import { Location } from '@core/models/location.model';
-import { delay, map, Observable } from 'rxjs';
+import { catchError, delay, map, Observable, throwError } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { HttpErrorCatcher } from './http-error-catcher';
 
 @Injectable({
   providedIn: 'root'
 })
-export class EventsApiService {
+export class EventsApiService extends HttpErrorCatcher {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+    super();
+  }
 
   public all(page: number, per_page: number): Observable<PaginatedEventResponse>{
     return this.http.get<any>(`${environment.server}/api/v1/events?page=${page}&per_page=${per_page}`)
     .pipe(
-      delay(3000),
+      catchError(error => {
+        this.connectionError(error);
+        return [];
+      })
     );
   }
 
@@ -29,7 +35,12 @@ export class EventsApiService {
       }
     });
     return this.http.get<any>(`${environment.server}/api/v1/events/search?page=${page}&per_page=${per_page}`, { params })
-    .pipe();
+    .pipe(
+      catchError(error => {
+        this.connectionError(error);
+        return [];
+      })
+    );
   }
 
   public event(slug: string, recommended_limit?: number): Observable<EventDetails>{
@@ -48,34 +59,62 @@ export class EventsApiService {
       map((response) => ({
         ...response,
         event: [response.event],
-      }))
+      })),
+      catchError(error => {
+        this.connectionError(error);
+        return throwError(() => error)
+      })
     );
   }
 
   public view(uuid: string): Observable<any>{
-    return this.http.post<any>(`${environment.server}/api/v1/events/${uuid}/view`, {})
+    return this.http.post<any>(`${environment.server}/api/v1/events/${uuid}/view`, {}).pipe(
+      catchError(error => {
+        this.connectionError(error);
+        return throwError(() => null)
+      })
+    )
   }
 
   public locations(): Observable<Location[]>{
     return this.http.get<any>(`${environment.server}/api/v1/events/locations`)
     .pipe(
-      map(response => response.data)
+      map(response => response.data),
+      catchError(error => {
+        this.connectionError(error);
+        return [];
+      })
     );
   }
 
   public byCategory(slug: string, page: number, per_page: number): Observable<PaginatedEventResponse>{
     return this.http.get<any>(`${environment.server}/api/v1/events/category/${slug}?page=${page}&per_page=${per_page}`)
-    .pipe();
+    .pipe(
+      catchError(error => {
+        this.connectionError(error);
+        return [];
+      })
+    );
   }
 
   public byTag(slug: string): Observable<PaginatedEventResponse>{
     return this.http.get<any>(`${environment.server}/api/v1/events/tag/${slug}`)
-    .pipe();
+    .pipe(
+      catchError(error => {
+        this.connectionError(error);
+        return [];
+      })
+    );
   }
 
   public bySeller(ide: string): Observable<PaginatedEventResponse>{
     return this.http.get<any>(`${environment.server}/api/v1/events/advertiser/${ide}`)
-    .pipe();
+    .pipe(
+      catchError(error => {
+        this.connectionError(error);
+        return [];
+      })
+    );
   }
 
 }

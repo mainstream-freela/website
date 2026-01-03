@@ -1,0 +1,16 @@
+version: '3.9'
+
+services:
+  website:
+    build:
+      context: ./
+    container_name: website
+    ports:
+      - '8080:80'
+  seller-backoffice:
+    build:
+      context: .
+      dockerfile: projects/seller-backoffice/Dockerfile
+    container_name: seller-backoffice
+    ports: 
+      - '8081:80'

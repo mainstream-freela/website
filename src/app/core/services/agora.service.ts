@@ -1,4 +1,5 @@
-import { inject, Injectable, Signal, signal } from "@angular/core";
+import { isPlatformBrowser } from "@angular/common";
+import { inject, Injectable, PLATFORM_ID, Signal, signal } from "@angular/core";
 import { StreamStats } from "@core/api/stream-stats.service";
 import AgoraRTC, { IAgoraRTCClient, IRemoteAudioTrack, IRemoteVideoTrack } from 'agora-rtc-sdk-ng';
 import { take } from "rxjs";
@@ -11,7 +12,8 @@ export class AgoraIOService{
     private agoraRtcClient!: IAgoraRTCClient;
     remoteVideoTrack?: IRemoteVideoTrack;
     remoteAudioTrack?: IRemoteAudioTrack;
-    
+    private platformId = inject(PLATFORM_ID);
+
     isLive = signal<boolean>(false);
     isMuted = signal<boolean>(false);
     isFullScreen = signal<boolean>(false);
@@ -50,7 +52,7 @@ export class AgoraIOService{
     }
 
     async joinAsAudience(): Promise<void>{
-
+        if(!isPlatformBrowser(this.platformId)) return;
         this.agoraRtcClient = AgoraRTC.createClient({ mode: 'live', codec: 'vp8' });
         await this.agoraRtcClient.setClientRole('audience');
         
