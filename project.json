@@ -34,7 +34,6 @@
     "build": {
       "executor": "@angular/build:application",
       "options": {
-        "tsConfig": "tsconfig.app.json",
         "assets": [
           {
             "glob": "**/*",
