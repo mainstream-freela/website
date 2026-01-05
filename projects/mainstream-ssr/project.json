@@ -1,0 +1,117 @@
+{
+  "name": "mainstream-ssr",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "generators": {
+    "@schematics/angular:class": {
+      "skipTests": true
+    },
+    "@schematics/angular:component": {
+      "skipTests": true
+    },
+    "@schematics/angular:directive": {
+      "skipTests": true
+    },
+    "@schematics/angular:guard": {
+      "skipTests": true
+    },
+    "@schematics/angular:interceptor": {
+      "skipTests": true
+    },
+    "@schematics/angular:pipe": {
+      "skipTests": true
+    },
+    "@schematics/angular:resolver": {
+      "skipTests": true
+    },
+    "@schematics/angular:service": {
+      "skipTests": true
+    }
+  },
+  "prefix": "app",
+  "sourceRoot": "projects/mainstream-ssr/src",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@angular/build:application",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/mainstream-ssr",
+        "browser": "projects/mainstream-ssr/src/main.ts",
+        "tsConfig": "projects/mainstream-ssr/tsconfig.app.json",
+        "assets": [
+          {
+            "glob": "**/*",
+            "input": "projects/mainstream-ssr/public"
+          }
+        ],
+        "styles": [
+          "projects/mainstream-ssr/src/styles.css",
+          "node_modules/aos/dist/aos.css"
+        ],
+        "scripts": [
+          "node_modules/aos/dist/aos.js"
+        ],
+        "server": "projects/mainstream-ssr/src/main.server.ts",
+        "ssr": {
+          "entry": "projects/mainstream-ssr/src/server.ts"
+        },
+        "outputMode": "server"
+      },
+      "configurations": {
+        "production": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "500kb",
+              "maximumError": "1mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "4kb",
+              "maximumError": "8kb"
+            }
+          ],
+          "outputHashing": "all"
+        },
+        "development": {
+          "optimization": false,
+          "extractLicenses": false,
+          "sourceMap": true,
+          "fileReplacements": [
+            {
+              "replace": "projects/mainstream-ssr/src/environments/environment.ts",
+              "with": "projects/mainstream-ssr/src/environments/environment.development.ts"
+            }
+          ]
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve": {
+      "continuous": true,
+      "executor": "@angular/build:dev-server",
+      "configurations": {
+        "production": {
+          "buildTarget": "mainstream-ssr:build:production"
+        },
+        "development": {
+          "buildTarget": "mainstream-ssr:build:development"
+        }
+      },
+      "defaultConfiguration": "development"
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "serve-static": {
+      "continuous": true,
+      "executor": "@nx/web:file-server",
+      "options": {
+        "buildTarget": "mainstream-ssr:build",
+        "staticFilePath": "dist/projects/mainstream-ssr/browser",
+        "spa": true
+      }
+    }
+  }
+}

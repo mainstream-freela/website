@@ -1,0 +1,107 @@
+{
+  "$schema": "node_modules/nx/schemas/project-schema.json",
+  "name": "mainstream",
+  "projectType": "application",
+  "generators": {
+    "@schematics/angular:class": {
+      "skipTests": true
+    },
+    "@schematics/angular:component": {
+      "skipTests": true
+    },
+    "@schematics/angular:directive": {
+      "skipTests": true
+    },
+    "@schematics/angular:guard": {
+      "skipTests": true
+    },
+    "@schematics/angular:interceptor": {
+      "skipTests": true
+    },
+    "@schematics/angular:pipe": {
+      "skipTests": true
+    },
+    "@schematics/angular:resolver": {
+      "skipTests": true
+    },
+    "@schematics/angular:service": {
+      "skipTests": true
+    }
+  },
+  "sourceRoot": "src",
+  "prefix": "app",
+  "targets": {
+    "build": {
+      "executor": "@angular/build:application",
+      "options": {
+        "tsConfig": "tsconfig.app.json",
+        "assets": [
+          {
+            "glob": "**/*",
+            "input": "public"
+          }
+        ]
+      },
+      "configurations": {
+        "production": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "500kB",
+              "maximumError": "1MB"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "4kB",
+              "maximumError": "8kB"
+            }
+          ],
+          "outputHashing": "all"
+        },
+        "development": {
+          "optimization": false,
+          "extractLicenses": false,
+          "sourceMap": true
+        }
+      },
+      "defaultConfiguration": "production",
+      "outputs": [
+        "{options.outputPath}"
+      ]
+    },
+    "serve": {
+      "executor": "@angular/build:dev-server",
+      "configurations": {
+        "production": {
+          "buildTarget": "mainstream:build:production"
+        },
+        "development": {
+          "buildTarget": "mainstream:build:development"
+        },
+        "staging": {
+          "buildTarget": "mainstream:build:staging"
+        }
+      },
+      "defaultConfiguration": "development"
+    },
+    "extract-i18n": {
+      "executor": "@angular/build:extract-i18n"
+    },
+    "test": {
+      "executor": "@angular/build:karma",
+      "options": {
+        "tsConfig": "tsconfig.spec.json",
+        "assets": [
+          {
+            "glob": "**/*",
+            "input": "public"
+          }
+        ],
+        "styles": [
+          "src/styles.css"
+        ],
+        "scripts": []
+      }
+    }
+  }
+}

@@ -1,13 +1,21 @@
 {
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "outDir": "./dist/out-tsc",
     "strict": true,
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "isolatedModules": true,
-    "esModuleInterop": true
+    "module": "preserve",
+    "baseUrl": "./",
+    "paths": {
+      "@core/*": ["src/app/core/*"],
+      "@pages/*": ["src/app/pages/*"],
+      "@shared/*": ["src/app/shared/*"],
+      "@partials/*": ["src/app/partials/*"],
+      "@libraries/*": ["src/app/libraries/*"]
+    },
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
@@ -15,13 +23,11 @@
     "strictInputAccessModifiers": true,
     "strictTemplates": true
   },
+  "files": [],
+  "include": [],
   "references": [
     {
-      "path": "./projects/seller-backoffice/tsconfig.app.json"
-    },
-    {
-      "path": "./projects/seller-backoffice/tsconfig.spec.json"
+      "path": "./tsconfig.app.json"
     }
-  ],
-  "extends": "./tsconfig.base.json"
+  ]
 }

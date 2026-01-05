@@ -1,17 +1,19 @@
 {
   "name": "mainstream",
   "version": "0.0.0",
+  "type": "module",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
-    "build-seller": "ng build --project=seller-backoffice",
-    "watch": "ng build --watch --configuration development",
-    "test": "ng test",
+    "start": "nx serve",
+    "build": "nx build",
+    "build-seller": "nx build --project=seller-backoffice",
+    "watch": "nx build --watch --configuration development",
+    "test": "nx test",
     "serve:ssr:mainstream": "node dist/mainstream/server/server.mjs"
   },
   "private": true,
   "dependencies": {
+    "@angular-devkit/build-angular": "^21.0.4",
     "@angular/animations": "^21.0.6",
     "@angular/common": "^21.0.6",
     "@angular/compiler": "^21.0.6",
@@ -38,13 +40,25 @@
     "@angular/build": "^21.0.4",
     "@angular/cli": "^21.0.4",
     "@angular/compiler-cli": "^21.0.6",
+    "@eslint/js": "^9.8.0",
     "@nx/angular": "22.3.3",
+    "@nx/eslint": "22.3.3",
+    "@nx/eslint-plugin": "22.3.3",
+    "@nx/js": "22.3.3",
+    "@nx/web": "22.3.3",
     "@nx/workspace": "22.3.3",
     "@schematics/angular": "^20.3.3",
+    "@swc-node/register": "~1.9.1",
+    "@swc/core": "~1.5.7",
+    "@swc/helpers": "~0.5.11",
     "@types/express": "^4.17.17",
     "@types/jasmine": "~5.1.0",
     "@types/node": "^18.18.0",
+    "@typescript-eslint/utils": "^8.40.0",
+    "angular-eslint": "^21.0.1",
     "baseline-browser-mapping": "^2.9.5",
+    "eslint": "^9.8.0",
+    "eslint-config-prettier": "^10.0.0",
     "jasmine-core": "~5.5.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",
@@ -53,7 +67,10 @@
     "karma-jasmine-html-reporter": "~2.1.0",
     "nx": "22.3.3",
     "postcss": "^8.5.3",
+    "prettier": "~3.6.2",
     "ts-node": "^10.9.2",
-    "typescript": "~5.9.3"
-  }
+    "typescript": "~5.9.3",
+    "typescript-eslint": "^8.40.0"
+  },
+  "nx": {}
 }

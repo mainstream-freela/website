@@ -1,16 +1,20 @@
-version: '3.9'
+version: "3.9"
 
 services:
   website:
     build:
-      context: ./
-    container_name: website
+      context: .
+      dockerfile: Dockerfile.ssr
+      args:
+        APP_NAME: mainstream-ssr
     ports:
-      - '8080:80'
+      - "4000:4000"
+
   seller-backoffice:
     build:
       context: .
-      dockerfile: projects/seller-backoffice/Dockerfile
-    container_name: seller-backoffice
-    ports: 
-      - '8081:80'
+      dockerfile: Dockerfile.csr
+      args:
+        APP_NAME: seller-backoffice
+    ports:
+      - "4001:80"

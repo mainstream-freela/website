@@ -1,0 +1,22 @@
+# ---------- BUILD ----------
+FROM node:20-alpine AS build
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm install
+
+COPY . .
+
+ARG APP_NAME
+RUN npx nx build $APP_NAME --configuration=production
+
+# ---------- RUNTIME ----------
+FROM node:20-alpine
+WORKDIR /app
+
+ARG APP_NAME
+COPY --from=build /app/dist/$APP_NAME/server ./server
+COPY --from=build /app/dist/$APP_NAME/browser ./browser
+
+EXPOSE 4000
+CMD ["node", "server/server.mjs"]
