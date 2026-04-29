@@ -55,7 +55,6 @@ export class LiveApiService extends HttpErrorCatcher {
             map(response => {
                 console.log(response);
                 if(response.status === HttpStatusCode.Ok){
-                    console.log("Event Uid -> ", response.event);
                     AgoraUidStorage.remove(response.event, 'audience');
                 }
             }),

@@ -17,9 +17,11 @@
                     <a [routerLink]="['/events']" [routerLinkActive]="'text-(color:--primary)'" class="text-base duration-[.2s] font-medium -tracking-[2%] !font-['Montserrat']">Eventos</a>
                 </li>
                 <li>
-                    <a [routerLink]="['/lives/access']" class="text-base bg-(color:--primary) text-white py-2 px-3 rounded-full duration-[.2s] flex justify-center items-center gap-2 font-medium -tracking-[2%] !font-['Montserrat']">
+                    <a [routerLink]="['/lives/access']" class="text-base relative bg-(color:--primary) custom-pulse text-white py-2 px-3 rounded-full duration-[.2s] flex justify-center items-center gap-2 font-medium -tracking-[2%] !font-['Montserrat']">
+                        <!-- <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-(color:--primary) opacity-75"></span> -->
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-video"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M15 10l4.553 -2.276a1 1 0 0 1 1.447 .894v6.764a1 1 0 0 1 -1.447 .894l-4.553 -2.276v-4z" /><path d="M3 6m0 2a2 2 0 0 1 2 -2h8a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-8a2 2 0 0 1 -2 -2z" /></svg>
-                        Assista à Live</a>
+                        Assista à Live
+                    </a>
                 </li>
                 <li>
                     <a [routerLink]="['/faq']" [routerLinkActive]="'text-(color:--primary)'" class="text-base duration-[.2s] font-medium -tracking-[2%] !font-['Montserrat']">FAQ</a>
@@ -102,11 +104,11 @@ appBodyHeightLimiter
                 <li>
                     <a [routerLink]="['/contact-us']" (click)="closeMobileMenu()" [routerLinkActive]="'text-(color:--primary)'" class="text-xl duration-[.2s] font-medium -tracking-[2%] !font-['Montserrat']">Contacto</a>
                 </li>
-
                 <li class="w-full">
                     <a [routerLink]="['/lives/access']" class="text-base bg-(color:--primary) w-full text-white py-2 px-3 rounded-full duration-[.2s] flex justify-center items-center gap-2 font-medium -tracking-[2%] !font-['Montserrat']">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-video"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M15 10l4.553 -2.276a1 1 0 0 1 1.447 .894v6.764a1 1 0 0 1 -1.447 .894l-4.553 -2.276v-4z" /><path d="M3 6m0 2a2 2 0 0 1 2 -2h8a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-8a2 2 0 0 1 -2 -2z" /></svg>
-                        Assista à Live</a>
+                        Assista à Live
+                    </a>
                 </li>
             </ul>
         </div>
