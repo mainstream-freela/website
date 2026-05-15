@@ -15,9 +15,9 @@ export class HttpErrorCatcher {
                 this.alertService.add(error.error.message, PopupStatus.ERROR);
                 break;
             
-            default:
-                this.alertService.add("Não foi possível concluir com o teu pedido neste momento", PopupStatus.ERROR)
-                break;
+            // default:
+            //     this.alertService.add("Não foi possível concluir com o teu pedido neste momento", PopupStatus.ERROR)
+            //     break;
         }
     }
 }

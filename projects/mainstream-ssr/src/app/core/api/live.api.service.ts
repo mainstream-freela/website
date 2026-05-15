@@ -36,7 +36,7 @@ export class LiveApiService extends HttpErrorCatcher {
             }),
             catchError(error => {
                 this.connectionError(error);
-                return throwError(() => null);
+                return throwError(() => error);
             })
         );
     }
@@ -45,7 +45,7 @@ export class LiveApiService extends HttpErrorCatcher {
         return this.http.post<any>(`${ environment.server }/api/v1/live/guest/access/ping`, data).pipe(
             catchError(error => {
                 this.connectionError(error);
-                return throwError(() => null);
+                return throwError(() => error);
             })
         );
     }
@@ -60,7 +60,7 @@ export class LiveApiService extends HttpErrorCatcher {
             }),
             catchError(error => {
                 this.connectionError(error);
-                return throwError(() => null);
+                return throwError(() => error);
             })
         );
     }

@@ -35,7 +35,7 @@ export class PurchaseTicket extends HttpErrorCatcher{
         return this.http.post(`${environment.server}/api/v1/client/purchase/ticket/${checkout.ticket.uuid}`, purchaseFormData, { observe: 'response' }).pipe(
             catchError(error => {
                 this.connectionError(error);
-                return throwError(() => null);
+                return throwError(() => error);
             })
         );
     }

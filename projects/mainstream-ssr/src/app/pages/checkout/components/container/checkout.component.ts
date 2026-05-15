@@ -9,6 +9,7 @@ import { PurchaseTicket } from '@core/api/purchase.api.service';
 import { PopUp, PopupStatus } from '@libraries/popup/popup.service';
 import { HttpStatusCode } from '@angular/common/http';
 import { DialogComponent } from '@shared/components/dialog/dialog.component';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-checkout',
@@ -47,14 +48,13 @@ export class CheckoutComponent implements OnInit {
   purchaseTicket(ticketPurchaser: TicketPurchaser): void{
 
     this.isPurchasingTicket.set(true);
-    this.purchaseService.purchaseTicket(ticketPurchaser, this.checkouts()[0]).subscribe({
+    this.purchaseService.purchaseTicket(ticketPurchaser, this.checkouts()[0]).pipe(finalize(() => this.isPurchasingTicket.set(false))).subscribe({
       next: (response) => {
         if(response.status === HttpStatusCode.NoContent){
             // this.popup.add("Seu pedido foi concluído com êxito. Entraremos em contacto pela via escolhida.", PopupStatus.SUCCESS);
             this.openDialog.set(true);
             this.purchaseCompleted.set(true);
         }
-        this.isPurchasingTicket.set(false);
       },
       error: (error) => {
         if(error.status === HttpStatusCode.UnprocessableEntity){
@@ -69,7 +69,6 @@ export class CheckoutComponent implements OnInit {
         } else {
           this.popup.add(error.error.message, PopupStatus.ERROR);          
         } 
-        this.isPurchasingTicket.set(false);
       }
     });
   }

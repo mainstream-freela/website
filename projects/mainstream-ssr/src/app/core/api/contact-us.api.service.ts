@@ -23,7 +23,7 @@ export class ContactUsApiService extends HttpErrorCatcher{
         return this.http.post<any>(`${environment.mailme}`, body, { headers, observe: 'response' }).pipe(
             catchError(error => {
                 this.connectionError(error);
-                return throwError(() => null);
+                return throwError(() => error);
             })
         );
     }

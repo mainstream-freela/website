@@ -73,8 +73,6 @@ export class ContentComponent implements OnInit {
         }
       },
       error: (error) => {
-
-        console.error(error);
         this.isLoading.set(false);
 
         // if(error.status === HttpStatusCode.UnprocessableEntity){

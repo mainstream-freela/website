@@ -30,7 +30,7 @@ export class AboutUsApiService extends HttpErrorCatcher{
             map(response => response.data),
             catchError(error => {
                 this.connectionError(error);
-                return throwError(() => null);
+                return throwError(() => error);
             })
         );
     }

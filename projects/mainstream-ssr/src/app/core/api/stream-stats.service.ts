@@ -14,7 +14,7 @@ export class StreamStats extends HttpErrorCatcher{
         return this.api.post(`${environment.server}/api/v1/live/stats/audience/count`, { agora_uid }).pipe(
             catchError(error => {
                 this.connectionError(error);
-                return throwError(() => null);
+                return throwError(() => error);
             })
         );
     }
