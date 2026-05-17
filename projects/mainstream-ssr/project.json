@@ -56,7 +56,7 @@
         "ssr": {
           "entry": "projects/mainstream-ssr/src/server.ts"
         },
-        "outputMode": "server"
+        "outputMode": "static"
       },
       "configurations": {
         "production": {
