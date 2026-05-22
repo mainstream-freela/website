@@ -80,7 +80,9 @@ export class HttpRequestSchema {
                 break;
 
             case HttpStatusCode.Forbidden:
-                // this.alertService.add(error.error.message, PopupStatus.ERROR);
+                if(error.error.message) {
+                    this.alertService.add(error.error.message, PopupStatus.ERROR);
+                }
                 break;
             
             default:
