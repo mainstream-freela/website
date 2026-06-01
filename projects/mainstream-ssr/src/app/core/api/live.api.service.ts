@@ -2,9 +2,7 @@ import { HttpClient, HttpStatusCode } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { AgoraUid, IdentificateGuest, JoinLiveEvent, LiveAccessResponse, PaidEventsForIdentifiedGuests } from "@core/contracts/live.contract";
 import { AgoraUidStorage } from "@core/data/agora-uid.data";
-import { LiveAccessFacade } from "@core/facades/live.facade";
-import { response } from "express";
-import { catchError, map, Observable, tap, throwError } from "rxjs";
+import { catchError, map, Observable, throwError } from "rxjs";
 import { environment } from "src/environments/environment";
 import { HttpErrorCatcher } from "./http-error-catcher";
 
@@ -53,7 +51,6 @@ export class LiveApiService extends HttpErrorCatcher {
     leave(data: AgoraUid): Observable<any>{
         return this.http.post<any>(`${ environment.server }/api/v1/live/guest/access/leave`, data).pipe(
             map(response => {
-                console.log(response);
                 if(response.status === HttpStatusCode.Ok){
                     AgoraUidStorage.remove(response.event, 'audience');
                 }

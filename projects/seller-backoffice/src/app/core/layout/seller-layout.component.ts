@@ -3,6 +3,7 @@ import { Component, inject, signal } from '@angular/core';
 import { RouterOutlet, RouterLinkWithHref } from '@angular/router';
 import { Logout } from '@seller-backoffice-core/services/logout.service';
 import { UserService } from '@seller-backoffice-core/services/user.service';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-seller-layout',
@@ -69,16 +70,13 @@ export class SellerLayoutComponent {
   logout(): void{
     if(this.isLoggingOut()) return;
     this.isLoggingOut.set(true);
-    this.logoutService.logout().subscribe({
+    this.logoutService.logout().pipe(finalize(() => this.isLoggingOut.set(false))).subscribe({
       next: response => {
         if(response.status === HttpStatusCode.Accepted){
           this.userService.unAuthenticate();
         }
-        this.isLoggingOut.set(false);
       },
       error: error => {
-        console.log(error)
-        this.isLoggingOut.set(false);
       }
     })
   }
