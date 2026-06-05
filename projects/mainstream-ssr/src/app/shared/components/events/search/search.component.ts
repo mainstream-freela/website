@@ -57,6 +57,8 @@ import { SearchTermCatcher } from '@pages/search-result/helpers/search-term-catc
                                   <option selected disabled [ngValue]=null>Localização</option>
                                   @for (location of locations(); track $index) {
                                       <option [ngValue]="location.slug">{{ location.name }}</option>
+                                  } @empty {
+                                    <option [ngValue]="null" disabled>Não existem locais com eventos agendados</option>
                                   }
                               </select>
                           </div>
