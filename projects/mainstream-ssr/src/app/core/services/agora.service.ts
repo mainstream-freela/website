@@ -53,6 +53,9 @@ export class AgoraIOService{
 
     async joinAsAudience(): Promise<void>{
         if(!isPlatformBrowser(this.platformId)) return;
+
+        AgoraRTC.setLogLevel(4);
+
         this.agoraRtcClient = AgoraRTC.createClient({ mode: 'live', codec: 'vp8' });
         await this.agoraRtcClient.setClientRole('audience');
         

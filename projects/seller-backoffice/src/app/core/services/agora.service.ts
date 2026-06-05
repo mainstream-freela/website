@@ -48,6 +48,8 @@ export class AgoraIOService{
 
     async startBroadcast(): Promise<void>{
 
+        AgoraRTC.setLogLevel(4);
+
         this.agoraRtcClient = AgoraRTC.createClient({ mode: 'live', codec: 'vp8' });
         await this.agoraRtcClient.setClientRole('host');
 
