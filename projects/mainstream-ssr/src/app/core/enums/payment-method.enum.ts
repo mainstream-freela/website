@@ -1,4 +1,5 @@
 export enum PaymentMethod{
     PAYPAY_APP = 'paypay-app',
-    REFERENCE = 'reference'
+    REFERENCE = 'reference',
+    MANUAL = 'manual'
 }

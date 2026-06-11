@@ -10,7 +10,7 @@ import { Event } from '@core/models/event.model';
         <div class="details-boxes flex flex-wrap gap-7 justify-center items-stretch">
 
           @if (!this.isLoading()) {
-            <div data-aos="fade-up" data-aos-delay="0" class="box w-full lg:w-[308px] flex flex-col gap-7 p-7 rounded-lg border-[0.5px] border-(color:--secondary)/70">
+            <!-- <div data-aos="fade-up" data-aos-delay="0" class="box w-full lg:w-[308px] flex flex-col gap-7 p-7 rounded-lg border-[0.5px] border-(color:--secondary)/70">
               <h1 class="!font-[Montserrat] font-semibold text-lg text-(color:--secondary)/70 leading-[120%] -tracking-[2%]">
                 Organização do Evento
               </h1>
@@ -50,7 +50,7 @@ import { Event } from '@core/models/event.model';
                   }             
                 </div>
               </div>
-            </div>
+            </div> -->
             @for (ticket of event()[0].tickets; track $index) {
               <div data-aos="fade-up" [attr.data-aos-delay]="$index+1 * 200" class="box w-full lg:w-[308px] flex flex-col gap-7 p-7 rounded-lg border-[0.5px] border-(color:--secondary)/70">
                 <h1 class="!font-[Montserrat] font-semibold text-lg text-(color:--secondary)/70 leading-[120%] -tracking-[2%]">

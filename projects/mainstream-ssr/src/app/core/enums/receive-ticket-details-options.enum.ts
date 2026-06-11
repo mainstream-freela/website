@@ -1,4 +1,4 @@
-export enum ReceiveTicicketDetailsOPtions{
+export enum ReceiveTicketDetailsOptions{
   WHATSAPP = 'whatsapp',
   EMAIL = 'email'
 }
