@@ -11,7 +11,7 @@
                     </h1>
                     <div class="details-content flex flex-col gap-3">
                         <p class="!font-['Montserrat'] leading-[120%] text-(color:--secondary) tracking-[-2%]">
-                            O Lorem Ipsum é um texto modelo da indústria tipográfica e de impressão.
+                            Escolha a categoria de bilhete que melhor se adapta à sua experiência.
                         </p>
                     </div>
                 </div>
@@ -21,7 +21,7 @@
                     </h1>
                     <div class="details-content flex flex-col gap-3">
                         <p class="!font-['Montserrat'] leading-[120%] text-(color:--secondary) tracking-[-2%]">
-                            O Lorem Ipsum é um texto modelo da indústria tipográfica e de impressão.
+                            Pague através da aplicação, por referência. A confirmação será processada de acordo com a opção selecionada.
                         </p>
                     </div>
                 </div>
@@ -31,13 +31,23 @@
                     </h1>
                     <div class="details-content flex flex-col gap-3">
                         <p class="!font-['Montserrat'] leading-[120%] text-(color:--secondary) tracking-[-2%]">
-                            O Lorem Ipsum é um texto modelo da indústria tipográfica e de impressão.
+                            Após a confirmação do pagamento, receberá o seu ingresso por e-mail com um QR Code único para acesso ao evento.
+                        </p>
+                    </div>
+                </div>
+                <div data-aos="fade-up" data-aos-delay="0" class="box w-full lg:w-[250px] flex flex-col gap-4 p-7 rounded-lg border-[0.5px] border-(color:--secondary)">
+                    <h1 class="!font-[Montserrat] font-bold text-lg flex gap-3 items-center text-(color:--primary) leading-[120%] -tracking-[2%]">
+                      4º Passo
+                    </h1>
+                    <div class="details-content flex flex-col gap-3">
+                        <p class="!font-['Montserrat'] leading-[120%] text-(color:--secondary) tracking-[-2%]">
+                            Assim que o pagamento for confirmado, o seu ingresso ficará disponível e terá acesso ao evento presencial ou à transmissão ao vivo, conforme o bilhete adquirido.
                         </p>
                     </div>
                 </div>
             </div>
         </div>
-        <div data-aos="fade-left" data-aos-delay="0" class="contact-form w-full xl:w-[470px]">
+        <div data-aos="fade-left" data-aos-delay="0" class="contact-form w-full xl:w-[550px]">
             <div class="form-container p-7 rounded-lg border-[0.5px] border-(color:--secondary) lg:sticky lg:top-[110px]">
                 <div class="form-header flex flex-col gap-4">
                     <!-- <h1 class="text-(color:--secondary) font-semibold text-2xl leading-[120%] !font-['Unigeo']">
@@ -95,23 +105,29 @@
                         </div>
                         <div class="receive-method flex flex-col gap-2">
                             <label for="" class="font-medium !font-['Montserrat'] text-sm text-(color:--secondary)">Como deseja fazer o pagamento?</label>
-                            <div class="methods flex gap-4 justify-start items-stretch">
+                            <div class="methods flex gap-2 flex-wrap justify-start items-stretch">
                                 <button id="paypay_app" (click)="changePaymentMethod(paymentMethodsEnum.PAYPAY_APP)" type="button" [class.selected]="this.selectedPaymentMethod() == this.paymentMethodsEnum.PAYPAY_APP" class="whatsapp cursor-pointer flex gap-5 justify-between items-center border-[0.5px] border-black rounded-[10px] py-[10px] px-3 w-fit">
-                                    <div class="option-name flex gap-2 justify-start items-center">
-                                        <img src="/assets/static/paypay.png" class="rounded" width="30" alt="">
-                                        <span class="!font-['Montserrat'] text-sm leading-[120%] -tracking-[2%]">Aplicativo da PayPay</span>
+                                    <div class="option-name flex gap-1 justify-start items-center">
+                                        <img src="/assets/static/paypay.png" class="rounded" width="25" alt="">
+                                        <span class="!font-['Montserrat'] text-xs leading-[120%] -tracking-[2%]">App da PayPay</span>
                                     </div>
                                     <!-- <div class="check-circle">
                                         <div class="circle w-4 h-4 border-[0.5px] duration-[.2s] border-black rounded-full"></div>
                                     </div> -->
                                 </button>
                                 <button id="reference" (click)="changePaymentMethod(paymentMethodsEnum.REFERENCE)" type="button" [class.selected]="this.selectedPaymentMethod() == this.paymentMethodsEnum.REFERENCE" class="email cursor-pointer flex gap-5 justify-between items-center border-[0.5px] border-black rounded-[10px] py-[10px] px-3 w-fit">
+                                    <div class="option-name flex gap-1 justify-start items-center">
+                                        <img src="/assets/static/ref-pay.jpg" class="rounded" width="25" alt="">
+                                        <span class="!font-['Montserrat'] text-xs leading-[120%] -tracking-[2%]">Referência</span>
+                                    </div>
+                                    <!-- <div class="check-circle">
+                                        <div class="circle w-4 h-4 border-[0.5px] duration-[.2s] border-black rounded-full"></div>
+                                    </div> -->
+                                </button>
+                                <button id="manual" (click)="changePaymentMethod(paymentMethodsEnum.MANUAL)" type="button" [class.selected]="this.selectedPaymentMethod() == this.paymentMethodsEnum.MANUAL" class="email cursor-pointer flex gap-5 justify-between items-center border-[0.5px] border-black rounded-[10px] py-[10px] px-3 w-fit">
                                     <div class="option-name flex gap-2 justify-start items-center">
-                                        <!-- <svg width="29" height="22" viewBox="0 0 29 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M27.3932 3.99078C27.8664 3.66459 28.1503 3.11574 28.1503 2.52787L28.1503 2.52641C28.1503 1.48713 27.3358 0.644612 26.3311 0.644612L2.66879 0.644609C1.66415 0.644609 0.84966 1.48713 0.84966 2.52641L0.84966 2.52734L0.84966 2.52787C0.84966 3.11574 1.13354 3.66459 1.60678 3.99078C3.91596 5.58365 10.874 10.382 13.4903 12.1866C14.1018 12.6084 14.8981 12.6084 15.5096 12.1866C18.126 10.382 25.084 5.58365 27.3932 3.99078Z" stroke="#F20530" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-                                            <path d="M28.1502 2.52737L28.1502 19.4726C28.1502 19.972 27.9586 20.4507 27.6169 20.8038C27.2757 21.1573 26.8129 21.3554 26.3302 21.3554L2.66957 21.3554C2.18682 21.3554 1.72407 21.1572 1.38281 20.8038C1.0411 20.4507 0.849539 19.972 0.849539 19.4726L0.84954 2.52737" stroke="#F20530" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-                                        </svg> -->
-                                        <span class="!font-['Montserrat'] text-sm leading-[120%] -tracking-[2%]">Por Referência</span>
+                                        <img src="/assets/static/ref-pay.jpg" class="rounded" width="25" alt="">
+                                        <span class="!font-['Montserrat'] text-xs leading-[120%] -tracking-[2%]">Referência por entidade</span>
                                     </div>
                                     <!-- <div class="check-circle">
                                         <div class="circle w-4 h-4 border-[0.5px] duration-[.2s] border-black rounded-full"></div>
@@ -120,7 +136,7 @@
                             </div>
                         </div>
                         <div class="reference-details flex flex-col gap-2">
-                            @if(selectedPaymentMethod() === paymentMethodsEnum.REFERENCE){
+                            @if(selectedPaymentMethod() === paymentMethodsEnum.MANUAL){
                                 <label for="" class="font-medium !font-['Montserrat'] text-sm text-(color:--secondary)">Informações de pagamento</label>
                                 <div class="inputs w-full flex flex-wrap gap-4 justify-between items-stretch">
                                     <div class="input w-full flex flex-col gap-2">

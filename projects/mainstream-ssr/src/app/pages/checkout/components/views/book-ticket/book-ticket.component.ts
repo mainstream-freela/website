@@ -2,7 +2,7 @@ import { NgClass } from '@angular/common';
 import { Component, ElementRef, input, OnChanges, OnInit, output, signal, SimpleChanges, viewChild, WritableSignal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { PaymentMethod } from '@core/enums/payment-method.enum';
-import { ReceiveTicicketDetailsOPtions } from '@core/enums/receive-ticket-details-options.enum';
+import { ReceiveTicketDetailsOptions } from '@core/enums/receive-ticket-details-options.enum';
 import { TicketPurchaser } from '@core/models/purchaser.model';
 import { mimeTypeValidator } from '@core/validators/file-mime.validator';
 import { FileInputComponent } from '@shared/components/file-input/file-input.component';
@@ -16,9 +16,9 @@ import { CopyToClipboardUi } from "@shared/ui/copy-to-clipboard.ui";
   styleUrl: './book-ticket.component.css'
 })
 export class BookTicketComponent implements OnInit, OnChanges {
-  receiveOptionsEnum = ReceiveTicicketDetailsOPtions;
+  receiveOptionsEnum = ReceiveTicketDetailsOptions;
   paymentMethodsEnum = PaymentMethod;
-  selectedOption: WritableSignal<ReceiveTicicketDetailsOPtions> = signal(this.receiveOptionsEnum.EMAIL);
+  selectedOption: WritableSignal<ReceiveTicketDetailsOptions> = signal(this.receiveOptionsEnum.EMAIL);
   selectedPaymentMethod: WritableSignal<PaymentMethod> = signal(this.paymentMethodsEnum.PAYPAY_APP);
   purchaseTicketFormGroup!: FormGroup;
 
@@ -53,7 +53,7 @@ export class BookTicketComponent implements OnInit, OnChanges {
     this.selectedPaymentMethod.set(method);
 
     const proofControl = this.purchaseTicketFormGroup.get('proof-of-transfer');
-    if(method === PaymentMethod.REFERENCE){
+    if(method === PaymentMethod.MANUAL){
       proofControl?.setValidators([
         Validators.required,
         mimeTypeValidator(['application/pdf'])
@@ -88,7 +88,7 @@ export class BookTicketComponent implements OnInit, OnChanges {
     this.selectedProofOfPayment = file;
   }
 
-  changeOption(option: ReceiveTicicketDetailsOPtions){
+  changeOption(option: ReceiveTicketDetailsOptions){
     this.selectedOption.set(option);
   }
 
