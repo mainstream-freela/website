@@ -27,15 +27,12 @@
                     <a [routerLink]="['/faq']" [routerLinkActive]="'text-(color:--primary)'" class="text-base duration-[.2s] font-medium -tracking-[2%] !font-['Montserrat']">FAQ</a>
                 </li>
                 <li>
-                    <a [routerLink]="['/create-account']" [routerLinkActive]="'text-(color:--primary)'" class="text-base duration-[.2s] font-medium -tracking-[2%] !font-['Montserrat']">Vender Tickets</a>
-                </li>
-                <li>
                     <a [routerLink]="['/contact-us']" [routerLinkActive]="'text-(color:--primary)'" class="text-base duration-[.2s] font-medium -tracking-[2%] !font-['Montserrat']">Contacto</a>
                 </li>
             </ul>
         </div>
-        <div class="cta hidden xl:block">
-            <a [href]="this.backoffice + '/auth'" class="flex gap-3 justify-start items-center !font-['Montserrat'] font-medium text-base">
+        <div class="relative group hidden xl:block z-50">
+            <button class="flex gap-3 justify-start items-center !font-['Montserrat'] font-medium text-base text-gray-800 hover:text-(color:--primary) transition-colors duration-200 cursor-pointer">
                 <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <g clip-path="url(#clip0_669_263)">
                     <circle cx="15" cy="15" r="15" fill="#FFECF0"/>
@@ -48,8 +45,21 @@
                     </clipPath>
                     </defs>
                 </svg>
-                Acessar conta
-            </a>
+                Portal do Organizador
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 ml-1 transition-transform duration-200 group-hover:rotate-180"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M6 9l6 6l6 -6" /></svg>
+            </button>
+            
+            <div class="absolute right-0 mt-2 w-48 bg-white border border-gray-100 rounded-2xl shadow-[0px_20px_40px_rgba(0,0,0,0.08)] py-2 transition-all duration-300 opacity-0 invisible translate-y-2 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0">
+                <a [href]="this.backoffice + '/auth'" class="flex items-center gap-3 px-4 py-3 text-sm text-gray-700 hover:bg-[#FFECF0] hover:text-(color:--primary) transition-all duration-200 font-medium font-['Montserrat']">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4.5 h-4.5"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M15 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2" /><path d="M21 12h-12m3 -3l-3 3l3 3" /></svg>
+                    Login
+                </a>
+                <div class="h-px bg-gray-100 mx-2"></div>
+                <a [routerLink]="['/create-account']" class="flex items-center gap-3 px-4 py-3 text-sm text-gray-700 hover:bg-[#FFECF0] hover:text-(color:--primary) transition-all duration-200 font-medium font-['Montserrat']">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4.5 h-4.5"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" /><path d="M16 19h6" /><path d="M19 16v6" /><path d="M6 21v-2a4 4 0 0 1 4 -4h4" /></svg>
+                    Criar Conta
+                </a>
+            </div>
         </div>
 
         <div class="menu-invoker xl:hidden h-[38px]">
@@ -98,8 +108,21 @@ appBodyHeightLimiter
                 <li>
                     <a [routerLink]="['/faq']" (click)="closeMobileMenu()" [routerLinkActive]="'text-(color:--primary)'" class="text-xl duration-[.2s] font-medium -tracking-[2%] !font-['Montserrat']">FAQ</a>
                 </li>
-                <li>
-                    <a [routerLink]="['/create-account']" (click)="closeMobileMenu()" [routerLinkActive]="'text-(color:--primary)'" class="text-xl duration-[.2s] font-medium -tracking-[2%] !font-['Montserrat']">Vender Tickets</a>
+                <li class="w-full">
+                    <button (click)="isMobilePortalDropdownExtended.set(!isMobilePortalDropdownExtended())" class="w-full flex justify-between items-center text-xl duration-[.2s] font-medium -tracking-[2%] !font-['Montserrat'] text-gray-900 focus:outline-none cursor-pointer">
+                        <span>Portal do Organizador</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 transition-transform duration-200" [ngClass]="{'rotate-180': isMobilePortalDropdownExtended()}"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M6 9l6 6l6 -6" /></svg>
+                    </button>
+                    <div class="pl-4 mt-3 flex flex-col gap-4 overflow-hidden transition-all duration-300" [ngClass]="{ 'max-h-0 opacity-0': !isMobilePortalDropdownExtended(), 'max-h-40 opacity-100': isMobilePortalDropdownExtended() }">
+                        <a [href]="this.backoffice + '/auth'" (click)="closeMobileMenu()" class="text-lg duration-[.2s] font-medium -tracking-[2%] !font-['Montserrat'] flex items-center gap-3 text-gray-700 hover:text-(color:--primary)">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-gray-500"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M15 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2" /><path d="M21 12h-12m3 -3l-3 3l3 3" /></svg>
+                            Login
+                        </a>
+                        <a [routerLink]="['/create-account']" (click)="closeMobileMenu()" [routerLinkActive]="'text-(color:--primary)'" class="text-lg duration-[.2s] font-medium -tracking-[2%] !font-['Montserrat'] flex items-center gap-3 text-gray-700 hover:text-(color:--primary)">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-gray-500"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" /><path d="M16 19h6" /><path d="M19 16v6" /><path d="M6 21v-2a4 4 0 0 1 4 -4h4" /></svg>
+                            Criar Conta
+                        </a>
+                    </div>
                 </li>
                 <li>
                     <a [routerLink]="['/contact-us']" (click)="closeMobileMenu()" [routerLinkActive]="'text-(color:--primary)'" class="text-xl duration-[.2s] font-medium -tracking-[2%] !font-['Montserrat']">Contacto</a>
