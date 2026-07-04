@@ -13,6 +13,7 @@ import { environment } from "src/environments/environment";
 })
 export class HeaderComponent{
     isMobileMenuExtended = signal<boolean>(false);
+    isMobilePortalDropdownExtended = signal<boolean>(false);
     backoffice: string = environment.server;
 
     openMobileMenu(){
@@ -21,6 +22,7 @@ export class HeaderComponent{
 
     closeMobileMenu(){
         this.isMobileMenuExtended.set(false);
+        this.isMobilePortalDropdownExtended.set(false);
     }
 
     toggleMobileMenuDropdown(){
