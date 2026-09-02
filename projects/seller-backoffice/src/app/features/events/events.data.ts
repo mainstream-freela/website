@@ -62,4 +62,10 @@ export class EventsData{
 
         return this.paginatedWithCategoryFilterEventsContainer[page][categorySlug].asObservable();
     }
+
+    public clear(): void {
+        this.paginatedEventsContainer = { 0: new BehaviorSubject<PaginatedEventResponse[]>([]) };
+        this.latestEventsContainer.next([]);
+        this.paginatedWithCategoryFilterEventsContainer = { 0: { '': new BehaviorSubject<PaginatedEventResponse[]>([]) } };
+    }
 }

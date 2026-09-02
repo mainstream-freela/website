@@ -18,5 +18,11 @@ export interface BaseEvent{
     is_highlighted: boolean,
     status: string,
     image: string,
-    location: BaseLocation
+    has_live_streaming: boolean,
+    location: BaseLocation,
+    live?: {
+        is_live: boolean;
+        started_at: string | null;
+        ended_at: string | null;
+    }
 }

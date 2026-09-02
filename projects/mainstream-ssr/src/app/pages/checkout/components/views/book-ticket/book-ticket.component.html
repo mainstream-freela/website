@@ -115,15 +115,12 @@
                                         <div class="circle w-4 h-4 border-[0.5px] duration-[.2s] border-black rounded-full"></div>
                                     </div> -->
                                 </button>
-                                <button id="reference" (click)="changePaymentMethod(paymentMethodsEnum.REFERENCE)" type="button" [class.selected]="this.selectedPaymentMethod() == this.paymentMethodsEnum.REFERENCE" class="email cursor-pointer flex gap-5 justify-between items-center border-[0.5px] border-black rounded-[10px] py-[10px] px-3 w-fit">
+                                <!-- <button id="reference" (click)="changePaymentMethod(paymentMethodsEnum.REFERENCE)" type="button" [class.selected]="this.selectedPaymentMethod() == this.paymentMethodsEnum.REFERENCE" class="email cursor-pointer flex gap-5 justify-between items-center border-[0.5px] border-black rounded-[10px] py-[10px] px-3 w-fit">
                                     <div class="option-name flex gap-1 justify-start items-center">
                                         <img src="/assets/static/ref-pay.jpg" class="rounded" width="25" alt="">
                                         <span class="!font-['Montserrat'] text-xs leading-[120%] -tracking-[2%]">Referência</span>
                                     </div>
-                                    <!-- <div class="check-circle">
-                                        <div class="circle w-4 h-4 border-[0.5px] duration-[.2s] border-black rounded-full"></div>
-                                    </div> -->
-                                </button>
+                                </button> -->
                                 <button id="manual" (click)="changePaymentMethod(paymentMethodsEnum.MANUAL)" type="button" [class.selected]="this.selectedPaymentMethod() == this.paymentMethodsEnum.MANUAL" class="email cursor-pointer flex gap-5 justify-between items-center border-[0.5px] border-black rounded-[10px] py-[10px] px-3 w-fit">
                                     <div class="option-name flex gap-2 justify-start items-center">
                                         <img src="/assets/static/ref-pay.jpg" class="rounded" width="25" alt="">

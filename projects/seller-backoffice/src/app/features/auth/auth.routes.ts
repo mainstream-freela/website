@@ -10,5 +10,10 @@ export const routes: Routes = [
         path: 'login',
         loadComponent: () => import('./pages/login.page').then(page => page.LoginPage),
         title: 'Entrar na minha conta'
+    },
+    {
+        path: 'sso',
+        loadComponent: () => import('./pages/sso.page').then(page => page.SSOPage),
+        title: 'Autenticação SSO'
     }
 ];
