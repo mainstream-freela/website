@@ -3,6 +3,7 @@ import { ActivatedRoute, Router, RouterLink } from "@angular/router";
 import { EventFacade } from '../events.facade';
 import { eventsProviders } from '../events.providers';
 import { Event } from '../events.models';
+import { EventsData } from '../events.data';
 import { StreamService } from '@seller-backoffice-core/services/stream.service';
 import { UserService } from '@seller-backoffice-core/services/user.service';
 import { PopUp, PopupStatus } from '@seller-backoffice-core/libs/popup/popup.service';
@@ -11,7 +12,7 @@ import { AgoraIOService } from '@seller-backoffice-core/services/agora.service';
 
 @Component({
   selector: 'app-event-list',
-  imports: [ ],
+  imports: [ RouterLink ],
   providers: [ ...eventsProviders() ],
   template: `
     <!-- events.component.html -->
@@ -28,8 +29,17 @@ import { AgoraIOService } from '@seller-backoffice-core/services/agora.service';
       <div class="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-200 group">
         <div class="relative h-[24.75rem] overflow-hidden">
           <img [src]="event.image" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-          <div class="absolute top-2 right-2 bg-black/50 text-white text-xs px-2 py-1 rounded backdrop-blur-md">
-            Offline
+          <div class="absolute top-2 right-2 text-white text-[10px] font-black uppercase px-2.5 py-1 rounded backdrop-blur-md"
+            [class.bg-red-600]="event.live?.is_live"
+            [class.bg-gray-700]="event.live?.ended_at"
+            [class.bg-blue-600]="!event.live">
+            @if (event.live?.is_live) {
+              AO VIVO
+            } @else if (event.live?.ended_at) {
+              TERMINADO
+            } @else {
+              AGENDADO
+            }
           </div>
         </div>
         
@@ -37,15 +47,23 @@ import { AgoraIOService } from '@seller-backoffice-core/services/agora.service';
           <p class="text-sm text-(--primary) font-medium mb-1">{{ event.formatted_date + ' às ' + event.time }}</p>
           <h3 class="text-lg font-bold text-gray-900 mb-4">{{ event.title }}</h3>
           
-          <button 
-            (click)="startLive(event, $index)"
-            class="w-full bg-(--primary) cursor-pointer text-white py-2.5 rounded-lg flex items-center justify-center gap-2 hover:bg-(--primary)-dark transition-all font-semibold shadow-lg shadow-(--primary)/20">
-            @if(isStartingLive() && index() === $index){
-              <img class="w-5 h-5" src="/loader.svg" alt="">
-            } @else {
-              <span>▶</span> Iniciar Live
-            }
-          </button>
+          @if (event.live?.ended_at) {
+            <a 
+              [routerLink]="['/my-account/events', event.uuid, 'report']"
+              class="w-full bg-gray-950 hover:bg-black text-center cursor-pointer text-white py-2.5 rounded-lg flex items-center justify-center gap-2 transition-all font-semibold shadow-lg text-xs uppercase tracking-wider">
+              📊 Ver Relatório da Live
+            </a>
+          } @else {
+            <button 
+              (click)="startLive(event, $index)"
+              class="w-full bg-(--primary) cursor-pointer text-white py-2.5 rounded-lg flex items-center justify-center gap-2 hover:bg-(--primary)-dark transition-all font-semibold shadow-lg shadow-(--primary)/20 text-xs uppercase tracking-wider">
+              @if(isStartingLive() && index() === $index){
+                <img class="w-5 h-5" src="/loader.svg" alt="">
+              } @else {
+                <span>▶</span> {{ event.live?.is_live ? 'Reentrar na Live' : 'Iniciar Live' }}
+              }
+            </button>
+          }
         </div>
       </div>
     } @empty {
@@ -113,6 +131,7 @@ import { AgoraIOService } from '@seller-backoffice-core/services/agora.service';
 export class EventListPage implements OnInit {
 
   private eventFacade = inject(EventFacade);
+  private eventsData = inject(EventsData);
   private activatedRoute = inject(ActivatedRoute);
   private router = inject(Router);
   private streamService = inject(StreamService);
@@ -135,6 +154,7 @@ export class EventListPage implements OnInit {
   events = signal<Event[]>([]);
 
   ngOnInit(): void {
+    this.eventsData.clear();
     this.activatedRoute.queryParamMap.subscribe(queryParams => {
       const page = queryParams.get('page') ?? '1';
       this.getEvents(parseInt(page));
@@ -153,6 +173,24 @@ export class EventListPage implements OnInit {
         this.to.set(response.to);
 
         this.isLoading.set(false);
+
+        // Check if we should automatically start live for a specific event
+        const startLiveUuid = this.activatedRoute.snapshot.queryParamMap.get('start_live');
+        if (startLiveUuid) {
+          const index = this.events().findIndex(e => e.uuid === startLiveUuid);
+          if (index !== -1) {
+            // Remove the start_live query parameter to prevent loop triggers on page reload
+            this.router.navigate([], {
+              relativeTo: this.activatedRoute,
+              queryParams: { start_live: null },
+              queryParamsHandling: 'merge',
+              replaceUrl: true
+            });
+
+            // Automatically trigger startLive
+            this.startLive(this.events()[index], index);
+          }
+        }
       },
       error: error => {
         this.isLoading.set(false);

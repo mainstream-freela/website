@@ -20,7 +20,28 @@ export class AgoraIOService{
     isCamOn = signal<boolean>(true);
     duration= signal<string>('00:00:00');
     timerInterval: any;
+    statsInterval: any;
     activeUsers = signal<number>(0);
+
+    // QoS Stats Signals
+    networkQuality = signal<number>(0);
+    videoBitrate = signal<number>(0);
+    videoFps = signal<number>(0);
+    videoResolution = signal<string>('N/A');
+
+    // Devices Signals
+    cameras = signal<MediaDeviceInfo[]>([]);
+    microphones = signal<MediaDeviceInfo[]>([]);
+    selectedCameraId = signal<string>('');
+    selectedMicrophoneId = signal<string>('');
+
+    // Screen Share Signals
+    isScreenSharing = signal<boolean>(false);
+    localScreenTrack?: any;
+
+    // Chat Signals (Agora RTC Data Streams)
+    chatMessages = signal<Array<{ sender: string, text: string, time: string, isHost: boolean }>>([]);
+    private dataStreamId?: number;
 
     public set channelName(channel: string){
         this.ChannelName = channel;
@@ -73,6 +94,181 @@ export class AgoraIOService{
         this.isPublishing.set(true);
         this.startTimer();
 
+        // 1. Setup QoS Quality Listeners
+        this.setupQoSMonitoring();
+
+        // 2. Setup Data Streams for Chat
+        this.setupChatDataStream();
+
+        // 3. Load Available Hardware Devices
+        await this.loadDevices();
+    }
+
+    private setupQoSMonitoring(): void {
+        this.agoraRtcClient.on("network-quality", (quality) => {
+            this.networkQuality.set(quality.uplinkNetworkQuality);
+        });
+
+        this.statsInterval = setInterval(() => {
+            if (!this.isPublishing()) return;
+            try {
+                if (this.localVideoTrack && !this.isScreenSharing()) {
+                    const stats = this.localVideoTrack.getStats() as any;
+                    if (stats) {
+                        this.videoBitrate.set(Math.round((stats.sendBitrate || 0) / 1000));
+                        this.videoFps.set(stats.sendFrameRate || 0);
+                        this.videoResolution.set(`${stats.captureWidth || 0}x${stats.captureHeight || 0}`);
+                    }
+                } else if (this.localScreenTrack && this.isScreenSharing()) {
+                    const stats = this.localScreenTrack.getStats() as any;
+                    if (stats) {
+                        this.videoBitrate.set(Math.round((stats.sendBitrate || 0) / 1000));
+                        this.videoFps.set(stats.sendFrameRate || 0);
+                        this.videoResolution.set(`${stats.captureWidth || 0}x${stats.captureHeight || 0}`);
+                    }
+                }
+            } catch (err) {
+                console.error("Error reading track stats:", err);
+            }
+        }, 2000);
+    }
+
+    private setupChatDataStream(): void {
+        try {
+            this.dataStreamId = (this.agoraRtcClient as any).createDataStream({ ordered: true, reliable: true });
+        } catch (err) {
+            console.error("Failed to create RTC data stream:", err);
+        }
+
+        this.agoraRtcClient.on("stream-message", (uid, data) => {
+            try {
+                const decoded = new TextDecoder().decode(data);
+                const payload = JSON.parse(decoded);
+                payload.isHost = payload.sender === 'Organizador';
+                this.chatMessages.update(msgs => [...msgs, payload]);
+            } catch (err) {
+                console.error("Failed to parse incoming stream message:", err);
+            }
+        });
+    }
+
+    sendChatMessage(senderName: string, text: string): void {
+        const payload = {
+            sender: senderName,
+            text: text,
+            time: new Date().toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' }),
+            isHost: true
+        };
+
+        this.chatMessages.update(msgs => [...msgs, payload]);
+
+        if (this.agoraRtcClient && this.dataStreamId !== undefined) {
+            try {
+                const encoded = new TextEncoder().encode(JSON.stringify(payload));
+                (this.agoraRtcClient as any).sendStreamMessage(this.dataStreamId, encoded);
+            } catch (err) {
+                console.error("Failed to broadcast chat message:", err);
+            }
+        }
+    }
+
+    async loadDevices(): Promise<void> {
+        try {
+            const devices = await AgoraRTC.getDevices();
+            const videoDevices = devices.filter(d => d.kind === 'videoinput');
+            const audioDevices = devices.filter(d => d.kind === 'audioinput');
+            this.cameras.set(videoDevices);
+            this.microphones.set(audioDevices);
+
+            if (this.localVideoTrack) {
+                const label = this.localVideoTrack.getTrackLabel();
+                const activeCam = videoDevices.find(d => d.label === label);
+                if (activeCam) this.selectedCameraId.set(activeCam.deviceId);
+            }
+            if (this.localAudioTrack) {
+                const label = this.localAudioTrack.getTrackLabel();
+                const activeMic = audioDevices.find(d => d.label === label);
+                if (activeMic) this.selectedMicrophoneId.set(activeMic.deviceId);
+            }
+        } catch (err) {
+            console.error("Failed to load audio/video devices:", err);
+        }
+    }
+
+    async switchCamera(deviceId: string): Promise<void> {
+        if (!this.localVideoTrack || this.isScreenSharing()) return;
+        try {
+            await this.localVideoTrack.setDevice(deviceId);
+            this.selectedCameraId.set(deviceId);
+        } catch (err) {
+            console.error("Failed to switch camera device:", err);
+        }
+    }
+
+    async switchMicrophone(deviceId: string): Promise<void> {
+        if (!this.localAudioTrack) return;
+        try {
+            await this.localAudioTrack.setDevice(deviceId);
+            this.selectedMicrophoneId.set(deviceId);
+        } catch (err) {
+            console.error("Failed to switch microphone device:", err);
+        }
+    }
+
+    async toggleScreenShare(): Promise<void> {
+        if (!this.isPublishing()) return;
+
+        if (!this.isScreenSharing()) {
+            try {
+                this.localScreenTrack = await AgoraRTC.createScreenVideoTrack({
+                    encoderConfig: "1080p_1"
+                }, "auto");
+
+                this.localScreenTrack.on("track-ended", () => {
+                    this.stopScreenShare();
+                });
+
+                if (this.localVideoTrack) {
+                    await this.agoraRtcClient.unpublish(this.localVideoTrack);
+                }
+                await this.agoraRtcClient.publish(this.localScreenTrack);
+
+                const container = document.getElementById('local-player');
+                if (container) {
+                    container.innerHTML = '';
+                    this.localScreenTrack.play(container);
+                }
+
+                this.isScreenSharing.set(true);
+            } catch (err) {
+                console.error("Failed to share screen:", err);
+            }
+        } else {
+            await this.stopScreenShare();
+        }
+    }
+
+    async stopScreenShare(): Promise<void> {
+        if (!this.isScreenSharing()) return;
+        try {
+            if (this.localScreenTrack) {
+                await this.agoraRtcClient.unpublish(this.localScreenTrack);
+                this.localScreenTrack.close();
+                this.localScreenTrack = undefined;
+            }
+
+            if (this.localVideoTrack) {
+                await this.agoraRtcClient.publish(this.localVideoTrack);
+                const container = document.getElementById('local-player');
+                if (container) {
+                    container.innerHTML = '';
+                    this.localVideoTrack.play(container);
+                }
+            }
+            this.isScreenSharing.set(false);
+        } catch (err) {
+            console.error("Failed to stop screen share:", err);
+        }
     }
 
     toggleMic() {
@@ -94,16 +290,25 @@ export class AgoraIOService{
     }
 
     async stopBroadcast() {
-        // Parar faixas locais
+        clearInterval(this.timerInterval);
+        clearInterval(this.statsInterval);
+
+        if (this.localScreenTrack) {
+            this.localScreenTrack.close();
+            this.localScreenTrack = undefined;
+        }
         this.localVideoTrack?.close();
         this.localAudioTrack?.close();
         
-        // Despublicar e sair
         await this.agoraRtcClient.unpublish();
         await this.agoraRtcClient.leave();
         
         this.isPublishing.set(false);
-        clearInterval(this.timerInterval);
+        this.isScreenSharing.set(false);
+        this.networkQuality.set(0);
+        this.videoBitrate.set(0);
+        this.videoFps.set(0);
+        this.videoResolution.set('N/A');
+        this.chatMessages.set([]);
     }
-
 }
